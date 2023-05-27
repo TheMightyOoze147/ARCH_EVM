@@ -1,10 +1,41 @@
-test: ./test/myReadkey_test.o
-	gcc -o ./test/myReadkey_test ./test/myReadkey_test.o -L./myTerm -lmyTerm -L./mySimpleComputer -lmySimpleComputer -L./myBigChars -lmyBigchars -L./myReadkey -lmyReadkey
+CC=gcc
+AR=ar
+CFLAGS=-c -Wall
+INC_DIRS=-I$(PWD)/myBigChars -I$(PWD)/myReadkey -I$(PWD)/mySimpleComputer -I$(PWD)/myTerm
 
-./test/myReadkey_test.o: ./test/myReadkey_test.c
-	gcc -c -Wall -Wextra -O0 -g -I./myTerm -I./mySimpleComputer -I./myBigChars -I./myReadkey -o ./test/myReadkey_test.o ./test/myReadkey_test.c
+all: ./test/myReadkey_test
 
-.PHONY: clean
+myBigChars/myBigChars.o: myBigChars/myBigChars.c myBigChars/myBigChars.h
+	$(CC) $(CFLAGS) $(INC_DIRS) $< -o $@
+
+myReadkey/myReadkey.o: myReadkey/myReadkey.c myReadkey/myReadkey.h
+	$(CC) $(CFLAGS) $(INC_DIRS) $< -o $@
+
+mySimpleComputer/mySimpleComputer.o: mySimpleComputer/mySimpleComputer.c mySimpleComputer/mySimpleComputer.h
+	$(CC) $(CFLAGS) $(INC_DIRS) $< -o $@
+
+myTerm/myTerm.o: myTerm/myTerm.c myTerm/myTerm.h
+	$(CC) $(CFLAGS) $(INC_DIRS) $< -o $@
+
+myBigChars/libmyBigChars.a: myBigChars/myBigChars.o
+	$(AR) rcs $@ $<
+
+myReadkey/libmyReadkey.a: myReadkey/myReadkey.o
+	$(AR) rcs $@ $<
+
+mySimpleComputer/libmySimpleComputer.a: mySimpleComputer/mySimpleComputer.o
+	$(AR) rcs $@ $<
+
+myTerm/libmyTerm.a: myTerm/myTerm.o
+	$(AR) rcs $@ $<
+
+test/myReadkey_test.o: test/myReadkey_test.c
+	$(CC) $(CFLAGS) $(INC_DIRS) $< -o $@
+
+./test/myReadkey_test: test/myReadkey_test.o myBigChars/libmyBigChars.a myReadkey/libmyReadkey.a mySimpleComputer/libmySimpleComputer.a myTerm/libmyTerm.a
+	$(CC) $^ -o $@
 
 clean:
-	rm -f ./test/myReadkey_test.o ./test/myReadkey_test
+	rm -f /.o /.a test
+
+.PHONY: all clean

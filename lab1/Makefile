@@ -1,11 +1,19 @@
-test: ./test/mySimpleComputer_test.o
-	gcc -o ./test/mySimpleComputer_test ./test/mySimpleComputer_test.o -L./mySimpleComputer -lmySimpleComputer
+CC = gcc
+CFLAGS = -Wall -Wextra -O0 -g -I./mySimpleComputer
+LDFLAGS = -L./mySimpleComputer -lmySimpleComputer
 
-./test/mySimpleComputer_test.o: ./test/mySimpleComputer_test.c
-	gcc -c -Wall -Wextra -O0 -g -I./mySimpleComputer -o ./test/mySimpleComputer_test.o ./test/mySimpleComputer_test.c
+all: test/mySimpleComputer_test
 
-.PHONY: clean
+mySimpleComputer/mySimpleComputer.o: mySimpleComputer/mySimpleComputer.c mySimpleComputer/mySimpleComputer.h
+	$(CC) $(CFLAGS) -c -o mySimpleComputer/mySimpleComputer.o mySimpleComputer/mySimpleComputer.c
+
+mySimpleComputer/libmySimpleComputer.a: mySimpleComputer/mySimpleComputer.o
+	ar rcs mySimpleComputer/libmySimpleComputer.a mySimpleComputer/mySimpleComputer.o
+
+test/mySimpleComputer_test: test/mySimpleComputer_test.c mySimpleComputer/libmySimpleComputer.a
+	$(CC) $(CFLAGS) -o test/mySimpleComputer_test test/mySimpleComputer_test.c $(LDFLAGS)
 
 clean:
-	rm -f ./test/mySimpleComputer_test.o ./test/mySimpleComputer_test
+	rm -f *.o *.a test/mySimpleComputer_test
 
+.PHONY: all clean

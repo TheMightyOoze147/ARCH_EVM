@@ -14,7 +14,7 @@ main ()
   sc_regInit ();
 
   keys key;
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 25; i++)
     {
       rk_readkey (&key);
       switch (key)
