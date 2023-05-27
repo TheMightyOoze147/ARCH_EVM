@@ -1,7 +1,6 @@
 #include <mySimpleComputer.h>
 
-int
-main ()
+int main ()
 {
   int *value = malloc (4);
 

@@ -1,10 +1,13 @@
 TARGET_MAIN = ./test/display
+TARGET_TEST3 = ./test/mySimpleComputer_test
 TARGET_TEST2 = ./test/myBigChars_test
 TARGET_TEST = ./test/myReadkey_test
 TARGET_LIB1 = ./mySimpleComputer/libmySimpleComputer.a
 TARGET_LIB2 = ./myTerm/libmyTerm.a
 TARGET_LIB3 = ./myBigChars/libmyBigChars.a
 TARGET_LIB4 = ./myReadkey/libmyReadkey.a
+OBJ_TEST_SIMPLE = ./test/mySimpleComputer_test.o
+SRC_TEST_SIMPLE = ./test/mySimplEcomputer_test.c
 CC = gcc
 CFLAGS = -Wall -Wextra -O0 -g -I./mySimpleComputer -I./myTerm -I./myBigChars -I./myReadkey
 .PHONY : clean
@@ -14,6 +17,14 @@ $(TARGET_TEST2) : $(OBJ_TEST2) $(TARGET_LIB3) $(TARGET_LIB2) $(TARGET_LIB1)
 
 $(OBJ_TEST2) : $(SRC_TEST2)
 	$(CC) -c $(CFLAGS) -o $@ $^
+
+$(TARGET_TEST3) : $(OBJ_TEST_SIMPLE) $(TARGET_LIB1)
+	$(CC) $(CFLAGS) -o $@ $< -L./mySimpleComputer -lmySimpleComputer
+
+$(OBJ_TEST_SIMPLE) : $(SRC_TEST_SIMPLE)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+mySimpleComputer_test: $(TARGET_TEST3)
 
 $(TARGET_MAIN) : ./test/display.o $(TARGET_LIB1) $(TARGET_LIB2) $(TARGET_LIB3) $(TARGET_LIB4) $(TARGET_TEST)
 	$(CC) $(CFLAGS) -o $@ ./test/display.o -L./mySimpleComputer -lmySimpleComputer -L./myTerm -lmyTerm -L./myBigChars -lmyBigChars -L./myReadkey -lmyReadkey
@@ -36,7 +47,7 @@ $(TARGET_LIB1) : ./mySimpleComputer/libmySimpleComputer.o
 
 
 $(TARGET_LIB2) : ./myTerm/libmyTerm.o
-	ar rcs $@ $^	
+	ar rcs $@ $^
 
 ./myTerm/libmyTerm.o : ./myTerm/myTerm.c
 	$(CC) -c $(CFLAGS) -o $@ $^

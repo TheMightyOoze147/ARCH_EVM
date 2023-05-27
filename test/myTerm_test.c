@@ -13,8 +13,8 @@ main ()
 
   int x, y;
   x = rand () % *cols, y = rand () % *rows;
-  char *str1 = " Я ОЧЕНЬ", *str2 = " СИЛЬНО ЛЮБЛЮ ",
-       *str3 = " АРХИТЕКТУРУ ЭВМ ";
+  char *str1 = " Данилюк ", *str2 = " ИА-131 ",
+       *str3 = " Андрей ";
   srand (time (NULL));
   for (int i = 0; i < 30; i++)
     {
